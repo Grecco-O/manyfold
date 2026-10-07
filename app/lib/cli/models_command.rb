@@ -41,5 +41,14 @@ module Cli
       end
       puts "\n#{scope.count} model permissions set to #{options[:preset]}" # rubocop:disable Pundit/UsePolicyScope
     end
+
+    desc "search_model", "search for a model and get matching names and IDs returned"
+    option :name, required: true, type: :string
+    def search_model
+      models = Model.where("name LIKE ?", options[:name]).pluck(:id, :name) # rubocop:disable Pundit/UsePolicyScope
+      models.each do |id, name|
+        puts "ID: #{id} - Name: #{name}"
+      end
+    end
   end
 end
