@@ -44,8 +44,14 @@ module Cli
 
     desc "search_model", "search for a model and get matching names and IDs returned"
     option :name, required: true, type: :string
+    option :case_insensitive, required: false, type: :boolean, default: false, aliases: :c
     def search_model
-      models = Model.where("name LIKE ?", options[:name]).pluck(:id, :name) # rubocop:disable Pundit/UsePolicyScope
+      query = if options[:case_insensitive]
+        "LOWER(name) LIKE LOWER(?)"
+      else
+        "name LIKE ?"
+      end
+      models = Model.where(query, options[:name]).pluck(:id, :name) # rubocop:disable Pundit/UsePolicyScope
       if models.empty?
         puts "No models found, please try again."
       else
