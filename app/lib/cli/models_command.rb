@@ -49,6 +49,8 @@ module Cli
       if models.empty?
         puts "No models found, please try again."
       else
+        puts "Entries found: #{models.length}"
+        puts "-" * 30
         models.each do |id, name|
           puts "ID: #{id} - Name: #{name}"
         end
