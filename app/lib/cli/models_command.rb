@@ -46,8 +46,12 @@ module Cli
     option :name, required: true, type: :string
     def search_model
       models = Model.where("name LIKE ?", options[:name]).pluck(:id, :name) # rubocop:disable Pundit/UsePolicyScope
-      models.each do |id, name|
-        puts "ID: #{id} - Name: #{name}"
+      if models.empty?
+        puts "No models found, please try again."
+      else
+        models.each do |id, name|
+          puts "ID: #{id} - Name: #{name}"
+        end
       end
     end
   end
