@@ -63,12 +63,13 @@ module Cli
       end
     end
 
-    desc "rename_models", "mass rename model names" # all case sensitive in postgres
+    desc "rename_models", "mass rename model names" # If the used DB is postgres, all three options are case-sensitive
     option :search_name, required: true, type: :string, aliases: :s # search name
     option :old_name, required: true, type: :string, aliases: :o # old name
     option :new_name, required: true, type: :string, aliases: :n # new name
     def rename_models
-      Model.where("name LIKE ?", options[:search_name]).find_each do |model| # rubocop:disable Pundit/UsePolicyScope
+      models = Model.where("name LIKE ?", options[:search_name]) # rubocop:disable Pundit/UsePolicyScope
+      models.find_each do |model|
         model.update!(name: model.name.gsub(options[:old_name], options[:new_name]))
       end
     end
